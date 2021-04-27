@@ -102,16 +102,20 @@ public class StreamApiTest {
 	}
 	
 	//
-	// Obtain a list of orders which belong to customer with tier = 3
+	// Obtain a list of products ordered by customer of tier 2 between 01-Feb-2021 and 01-Apr-2021
 	//
 	@Test
 	public void exercise4() {
-		
-		log.info("exercise 4 - Obtain a list of orders which belong to customer with tier = 3");
+				
+		log.info("exercise 4 - Obtain a list of products ordered by customer of tier 2 between 01-Feb-2021 and 01-Apr-2021");
 		long startTime = System.currentTimeMillis();		
-		List<Order> result = orderRepo.findAll()
+		List<Product> result = orderRepo.findAll()
 		.stream()
-		.filter(o -> o.getCustomer().getTier() == 3)
+		.filter(o -> o.getCustomer().getTier() == 2)
+		.filter(o -> o.getOrderDate().compareTo(LocalDate.of(2021, 2, 1)) >= 0)
+		.filter(o -> o.getOrderDate().compareTo(LocalDate.of(2021, 4, 1)) <= 0)
+		.flatMap(o -> o.getProducts().stream())
+		.distinct()
 		.collect(Collectors.toList());
 		
 		long endTime = System.currentTimeMillis();
@@ -120,23 +124,22 @@ public class StreamApiTest {
 	}
 	
 	//
-	// Get the 3 cheapest products of “Books” category
+	// Get the cheapest products of “Books” category
 	//
 	@Test
 	public void exercise5() {
 		
 		log.info("exercise 5 - Get the 3 cheapest products of \"Books\" category");
 		long startTime = System.currentTimeMillis();		
-		List<Product> result = productRepo.findAll()
+		Optional<Product> result = productRepo.findAll()
 				.stream()
 				.filter(p -> p.getCategory().equalsIgnoreCase("Books"))
 				.sorted(Comparator.comparing(Product::getPrice))
-				.limit(3)
-				.collect(Collectors.toList());
-		
+				.findFirst();
+
 		long endTime = System.currentTimeMillis();
 		log.info(String.format("exercise 5 - execution time: %1$d ms", (endTime - startTime)));		
-		result.forEach(o -> log.info(o.toString()));
+		log.info(result.get().toString());
 					
 	}
 	
@@ -151,7 +154,7 @@ public class StreamApiTest {
 		List<Order> result = orderRepo.findAll()
 				.stream()
 				.sorted(Comparator.comparing(Order::getOrderDate).reversed())
-				.limit(5)
+				.limit(3)
 				.collect(Collectors.toList());
 		
 		long endTime = System.currentTimeMillis();
@@ -160,17 +163,19 @@ public class StreamApiTest {
 	}
 	
 	//
-	// Get a list of products which was ordered on 1-Jan-2021
+	// Log order with order date on 1-Jan-2021 to the console and get a list of products
 	//
 	@Test
 	public void exercise7() {
 		
-		log.info("exercise 7 - Get a list of products which was ordered on 1-Jan-2021");
+		log.info("exercise 7 - Get a list of products which was ordered on 15-Mar-2021");
 		long startTime = System.currentTimeMillis();		
 		List<Product> result = orderRepo.findAll()
 				.stream()
-				.filter(o -> o.getOrderDate().isEqual(LocalDate.of(2021, 1, 1)))
+				.filter(o -> o.getOrderDate().isEqual(LocalDate.of(2021, 3, 15)))
+				.peek(o -> System.out.println(o.toString()))
 				.flatMap(o -> o.getProducts().stream())
+				.distinct()
 				.collect(Collectors.toList());
 		
 		long endTime = System.currentTimeMillis();
@@ -179,16 +184,17 @@ public class StreamApiTest {
 	}
 	
 	//
-	// Calculate the total lump of all orders placed on 14-Feb-2020
+	// Calculate the total lump of all orders placed on 14-Feb-2021
 	//
 	@Test
 	public void exercise8() {
 		
-		log.info("exercise 8 - Calculate the total lump of all orders placed on 14-Feb-2020");
+		log.info("exercise 8 - Calculate the total lump of all orders placed in Feb 2021");
 		long startTime = System.currentTimeMillis();	
 		Double result = orderRepo.findAll()
 				.stream()
-				.filter(o -> o.getOrderDate().isEqual(LocalDate.of(2021, 2, 14)))
+				.filter(o -> o.getOrderDate().compareTo(LocalDate.of(2021, 2, 1)) >= 0)
+				.filter(o -> o.getOrderDate().compareTo(LocalDate.of(2021, 3, 1)) < 0)
 				.flatMap(o -> o.getProducts().stream())
 				.mapToDouble(p -> p.getPrice())
 				.sum();	

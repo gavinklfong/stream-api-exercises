@@ -1,7 +1,6 @@
 package space.gavinklfong.demo.streamapi.models;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -17,12 +16,12 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.ToString;
 
 @Builder
-//@Data
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -31,21 +30,16 @@ public class Order {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Setter @Getter
 	private Long id;
 	
-	@Setter @Getter
 	private LocalDate orderDate;
 
-	@Setter @Getter
 	private LocalDate deliveryDate;
 	
-	@Setter @Getter
 	private String status;
 	
 	@ManyToOne
 	@JoinColumn(name = "customer_id")
-	@Setter @Getter
 	private Customer customer;
 	
 	@ManyToMany
@@ -54,12 +48,8 @@ public class Order {
 			joinColumns = { @JoinColumn(name = "order_id") },
 			inverseJoinColumns = { @JoinColumn(name = "product_id") }
 	)
-	@Setter @Getter
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
 	Set<Product> products;
-	
-	@Override
-	public String toString() {
-		return String.format("id=$1%d, orderDate=%2$tF, deliveryDate=%3$tF, status=%4$s", id, orderDate, deliveryDate, status);
-	}
-	
+		
 }

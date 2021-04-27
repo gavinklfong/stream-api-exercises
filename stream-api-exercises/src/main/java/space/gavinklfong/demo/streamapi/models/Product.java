@@ -11,13 +11,14 @@ import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.ToString;
 import lombok.With;
 
 @Builder
-//@Data
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -26,25 +27,18 @@ public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Setter @Getter
 	private Long id;
 
-	@Setter @Getter
 	private String name;
 
-	@Setter @Getter
 	private String category;
 	
-	@Setter @Getter
 	@With
 	private Double price;
 	
 	@ManyToMany(mappedBy = "products")
-	@Setter @Getter
+	@ToString.Exclude
+	 @EqualsAndHashCode.Exclude
 	private Set<Order> orders;
 	
-	@Override
-	public String toString() {
-		return String.format("id=$1%d, name=%2$s, category=%3$s, price=%4$f", id, name, category, price);
-	}
 }
