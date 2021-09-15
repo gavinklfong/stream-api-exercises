@@ -14,7 +14,7 @@ The example data model consists of Customer, Order and Product. Customers can pl
 
 ## Exercises
 
-The exercises and the sample solutions can be found in test source space.gavinklfong.demo.streamapi.StreamApiTest
+The exercises and the sample solutions can be found in test source ``space.gavinklfong.demo.streamapi.StreamApiTest``
 
 You may refer to this article for detail walk through about the exercises.
 
