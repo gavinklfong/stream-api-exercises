@@ -10,7 +10,7 @@ It is a Spring Boot project with a example data model, repositories and a set of
 
 The example data model consists of Customer, Order and Product. Customers can place multiple orders and each order would contain a number of products.
 
-![Data Model](https://raw.githubusercontent.com/gavinklfong/java-stream-api-exercises/main/stream-api-exercises/blob/Data_Model.jpg)
+![Data Model](https://github.com/gavinklfong/stream-api-exercises/blob/main/blob/Data_Model.jpg?raw=true)
 
 ## Exercises
 
