@@ -10,11 +10,11 @@ It is a Spring Boot project with a example data model, repositories and a set of
 
 The example data model consists of Customer, Order and Product. Customers can place multiple orders and each order would contain a number of products.
 
-![Data Model](https://raw.githubusercontent.com/gavinklfong/stream-api-exercises/main/blob/Data_Model.jpg)
+![Data Model](https://raw.githubusercontent.com/gavinklfong/java-stream-api-exercises/main/stream-api-exercises/blob/Data_Model.jpg)
 
 ## Exercises
 
-The exercises and the sample solutions can be found in test source space.gavinklfong.demo.streamapi.StreamApiTest
+The exercises and the sample solutions can be found in test source ``space.gavinklfong.demo.streamapi.StreamApiTest``
 
 You may refer to this article for detail walk through about the exercises.
 
