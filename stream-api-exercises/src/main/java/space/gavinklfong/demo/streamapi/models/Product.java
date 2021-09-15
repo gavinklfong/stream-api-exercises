@@ -1,21 +1,9 @@
 package space.gavinklfong.demo.streamapi.models;
 
+import lombok.*;
+
+import javax.persistence.*;
 import java.util.Set;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.With;
 
 @Builder
 @Data
@@ -38,7 +26,7 @@ public class Product {
 	
 	@ManyToMany(mappedBy = "products")
 	@ToString.Exclude
-	 @EqualsAndHashCode.Exclude
+	@EqualsAndHashCode.Exclude
 	private Set<Order> orders;
 	
 }

@@ -1,25 +1,20 @@
 package space.gavinklfong.demo.streamapi;
 
-import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.DoubleSummaryStatistics;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import lombok.extern.slf4j.Slf4j;
 import space.gavinklfong.demo.streamapi.models.Customer;
 import space.gavinklfong.demo.streamapi.models.Order;
 import space.gavinklfong.demo.streamapi.models.Product;
 import space.gavinklfong.demo.streamapi.repos.CustomerRepo;
 import space.gavinklfong.demo.streamapi.repos.OrderRepo;
 import space.gavinklfong.demo.streamapi.repos.ProductRepo;
+
+import java.time.LocalDate;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @DataJpaTest
@@ -131,11 +126,17 @@ public class StreamApiTest {
 		
 		log.info("exercise 5 - Get the 3 cheapest products of \"Books\" category");
 		long startTime = System.currentTimeMillis();		
+//		Optional<Product> result = productRepo.findAll()
+//				.stream()
+//				.filter(p -> p.getCategory().equalsIgnoreCase("Books"))
+//				.sorted(Comparator.comparing(Product::getPrice))
+//				.findFirst();
+
 		Optional<Product> result = productRepo.findAll()
 				.stream()
 				.filter(p -> p.getCategory().equalsIgnoreCase("Books"))
-				.sorted(Comparator.comparing(Product::getPrice))
-				.findFirst();
+				.min(Comparator.comparing(Product::getPrice));
+				
 
 		long endTime = System.currentTimeMillis();
 		log.info(String.format("exercise 5 - execution time: %1$d ms", (endTime - startTime)));		
