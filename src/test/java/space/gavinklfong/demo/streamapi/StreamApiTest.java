@@ -163,12 +163,12 @@ public class StreamApiTest {
 	@DisplayName("Calculate the total lump of all orders placed in Feb 2021")
 	public void exercise8() {
 		long startTime = System.currentTimeMillis();
-		Double result = orderRepo.findAll()
+		double result = orderRepo.findAll()
 				.stream()
 				.filter(o -> o.getOrderDate().compareTo(LocalDate.of(2021, 2, 1)) >= 0)
 				.filter(o -> o.getOrderDate().compareTo(LocalDate.of(2021, 3, 1)) < 0)
 				.flatMap(o -> o.getProducts().stream())
-				.mapToDouble(p -> p.getPrice())
+				.mapToDouble(Product::getPrice)
 				.sum();	
 		
 		long endTime = System.currentTimeMillis();
@@ -180,11 +180,11 @@ public class StreamApiTest {
 	@DisplayName("Calculate the average price of all orders placed on 15-Mar-2021")
 	public void exercise9() {
 		long startTime = System.currentTimeMillis();
-		Double result = orderRepo.findAll()
+		double result = orderRepo.findAll()
 				.stream()
 				.filter(o -> o.getOrderDate().isEqual(LocalDate.of(2021, 3, 15)))
 				.flatMap(o -> o.getProducts().stream())
-				.mapToDouble(p -> p.getPrice())
+				.mapToDouble(Product::getPrice)
 				.average().getAsDouble();
 		
 		long endTime = System.currentTimeMillis();
@@ -199,7 +199,7 @@ public class StreamApiTest {
 		DoubleSummaryStatistics statistics = productRepo.findAll()
 				.stream()
 				.filter(p -> p.getCategory().equalsIgnoreCase("Books"))
-				.mapToDouble(p -> p.getPrice())
+				.mapToDouble(Product::getPrice)
 				.summaryStatistics();
 		
 		long endTime = System.currentTimeMillis();
@@ -210,16 +210,15 @@ public class StreamApiTest {
 	}
 
 	@Test
-	@DisplayName("Obtain a mapping of order id and the order's product co")
+	@DisplayName("Obtain a mapping of order id and the order's product count")
 	public void exercise11() {
 		long startTime = System.currentTimeMillis();
 		Map<Long, Integer>  result = orderRepo.findAll()
 				.stream()
 				.collect(
 						Collectors.toMap(
-								order -> order.getId(),
-								order -> order.getProducts().size()
-								)
+								Order::getId,
+								order -> order.getProducts().size())
 						);
 		
 		long endTime = System.currentTimeMillis();
@@ -233,9 +232,7 @@ public class StreamApiTest {
 		long startTime = System.currentTimeMillis();
 		Map<Customer, List<Order>> result = orderRepo.findAll()
 				.stream()
-				.collect(
-						Collectors.groupingBy(Order::getCustomer)
-						);
+				.collect(Collectors.groupingBy(Order::getCustomer));
 		
 		long endTime = System.currentTimeMillis();
 		log.info(String.format("exercise 12 - execution time: %1$d ms", (endTime - startTime)));		
@@ -252,8 +249,7 @@ public class StreamApiTest {
 					Collectors.toMap(
 							Function.identity(), 
 							order -> order.getProducts().stream()
-										.mapToDouble(p -> p.getPrice()).sum()
-						) 
+										.mapToDouble(Product::getPrice).sum())
 					);
 		
 		long endTime = System.currentTimeMillis();
@@ -270,7 +266,7 @@ public class StreamApiTest {
 				.collect(
 						Collectors.groupingBy(
 								Product::getCategory,
-								Collectors.mapping(product -> product.getName(), Collectors.toList()))
+								Collectors.mapping(Product::getName, Collectors.toList()))
 						);
 		
 		
