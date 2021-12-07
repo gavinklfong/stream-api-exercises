@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -33,15 +34,10 @@ public class StreamApiTest {
 	
 	@Autowired
 	private ProductRepo productRepo;	
-	
-	
-	//
-	// Obtain a list of product with category = "Books" and price > 100
-	//
-	@Test
-	public void exercise1() {
 
-		log.info("exercise 1 - Obtain a list of product with category = \"Books\" and price > 100");
+	@Test
+	@DisplayName("Obtain a list of product with category = \"Books\" and price > 100")
+	public void exercise1() {
 		long startTime = System.currentTimeMillis();
 		List<Product> result = productRepo.findAll()
 		.stream()
@@ -54,14 +50,10 @@ public class StreamApiTest {
 		result.forEach(p -> log.info(p.toString()));
 		
 	}
-	
-	//
-	// Obtain a list of order with product category = "Baby"
-	//
+
 	@Test
+	@DisplayName("Obtain a list of order with product category = \"Baby\"")
 	public void exercise2() {
-		
-		log.info("exercise 2 - Obtain a list of order with product category = \"Baby\"");
 		long startTime = System.currentTimeMillis();
 		List<Order> result = orderRepo.findAll()
 				.stream()
@@ -78,15 +70,10 @@ public class StreamApiTest {
 		result.forEach(o -> log.info(o.toString()));
 
 	}
-	
-	
-	//
-	// Obtain a list of product with category = “Toys” and then apply 10% discount
-	//
+
 	@Test
+	@DisplayName("Obtain a list of product with category = “Toys” and then apply 10% discount\"")
 	public void exercise3() {
-		
-		log.info("exercise 3 - Obtain a list of product with category = “Toys” and then apply 10% discount");
 		long startTime = System.currentTimeMillis();
 		
 		List<Product> result = productRepo.findAll()
@@ -100,15 +87,11 @@ public class StreamApiTest {
 		result.forEach(o -> log.info(o.toString()));
 		
 	}
-	
-	//
-	// Obtain a list of products ordered by customer of tier 2 between 01-Feb-2021 and 01-Apr-2021
-	//
+
 	@Test
+	@DisplayName("Obtain a list of products ordered by customer of tier 2 between 01-Feb-2021 and 01-Apr-2021")
 	public void exercise4() {
-				
-		log.info("exercise 4 - Obtain a list of products ordered by customer of tier 2 between 01-Feb-2021 and 01-Apr-2021");
-		long startTime = System.currentTimeMillis();		
+		long startTime = System.currentTimeMillis();
 		List<Product> result = orderRepo.findAll()
 		.stream()
 		.filter(o -> o.getCustomer().getTier() == 2)
@@ -122,14 +105,10 @@ public class StreamApiTest {
 		log.info(String.format("exercise 4 - execution time: %1$d ms", (endTime - startTime)));		
 		result.forEach(o -> log.info(o.toString()));
 	}
-	
-	//
-	// Get the cheapest products of “Books” category
-	//
+
 	@Test
+	@DisplayName("Get the 3 cheapest products of \"Books\" category")
 	public void exercise5() {
-		
-		log.info("exercise 5 - Get the 3 cheapest products of \"Books\" category");
 		long startTime = System.currentTimeMillis();
 //              Optional<Product> result = productRepo.findAll()
 //                              .stream()
@@ -147,14 +126,10 @@ public class StreamApiTest {
 		log.info(result.get().toString());
 					
 	}
-	
-	//
-	// Get the 3 most recent placed order
-	//
+
 	@Test
+	@DisplayName("Get the 3 most recent placed order")
 	public void exercise6() {
-		
-		log.info("exercise 6 - Get the 3 most recent placed order");
 		long startTime = System.currentTimeMillis();	
 		List<Order> result = orderRepo.findAll()
 				.stream()
@@ -166,15 +141,11 @@ public class StreamApiTest {
 		log.info(String.format("exercise 6 - execution time: %1$d ms", (endTime - startTime)));		
 		result.forEach(o -> log.info(o.toString()));
 	}
-	
-	//
-	// Log order with order date on 1-Jan-2021 to the console and get a list of products
-	//
+
 	@Test
+	@DisplayName("Get a list of products which was ordered on 15-Mar-2021")
 	public void exercise7() {
-		
-		log.info("exercise 7 - Get a list of products which was ordered on 15-Mar-2021");
-		long startTime = System.currentTimeMillis();		
+		long startTime = System.currentTimeMillis();
 		List<Product> result = orderRepo.findAll()
 				.stream()
 				.filter(o -> o.getOrderDate().isEqual(LocalDate.of(2021, 3, 15)))
@@ -187,61 +158,48 @@ public class StreamApiTest {
 		log.info(String.format("exercise 7 - execution time: %1$d ms", (endTime - startTime)));		
 		result.forEach(o -> log.info(o.toString()));
 	}
-	
-	//
-	// Calculate the total lump of all orders placed on 14-Feb-2021
-	//
+
 	@Test
+	@DisplayName("Calculate the total lump of all orders placed in Feb 2021")
 	public void exercise8() {
-		
-		log.info("exercise 8 - Calculate the total lump of all orders placed in Feb 2021");
-		long startTime = System.currentTimeMillis();	
-		Double result = orderRepo.findAll()
+		long startTime = System.currentTimeMillis();
+		double result = orderRepo.findAll()
 				.stream()
 				.filter(o -> o.getOrderDate().compareTo(LocalDate.of(2021, 2, 1)) >= 0)
 				.filter(o -> o.getOrderDate().compareTo(LocalDate.of(2021, 3, 1)) < 0)
 				.flatMap(o -> o.getProducts().stream())
-				.mapToDouble(p -> p.getPrice())
+				.mapToDouble(Product::getPrice)
 				.sum();	
 		
 		long endTime = System.currentTimeMillis();
 		log.info(String.format("exercise 8 - execution time: %1$d ms", (endTime - startTime)));		
 		log.info("Total lump sum = " + result);
 	}
-	
-	
-	//
-	// Calculate the average price of all orders placed on 15-Mar-2021
-	//
+
 	@Test
+	@DisplayName("Calculate the average price of all orders placed on 15-Mar-2021")
 	public void exercise9() {
-	
-		log.info("exercise 9 - Calculate the average price of all orders placed on 15-Mar-2021");
-		long startTime = System.currentTimeMillis();	
-		Double result = orderRepo.findAll()
+		long startTime = System.currentTimeMillis();
+		double result = orderRepo.findAll()
 				.stream()
 				.filter(o -> o.getOrderDate().isEqual(LocalDate.of(2021, 3, 15)))
 				.flatMap(o -> o.getProducts().stream())
-				.mapToDouble(p -> p.getPrice())
+				.mapToDouble(Product::getPrice)
 				.average().getAsDouble();
 		
 		long endTime = System.currentTimeMillis();
 		log.info(String.format("exercise 9 - execution time: %1$d ms", (endTime - startTime)));		
 		log.info("Average = " + result);
 	}
-	
-	//
-	// Obtain statistics summary of all products which category = "Books"
-	//
+
 	@Test
+	@DisplayName("Obtain statistics summary of all products belong to \"Books\" category")
 	public void exercise10() {
-		
-		log.info("exercise 10 - Obtain statistics summary of all products belong to \"Books\" category");
-		long startTime = System.currentTimeMillis();	
+		long startTime = System.currentTimeMillis();
 		DoubleSummaryStatistics statistics = productRepo.findAll()
 				.stream()
 				.filter(p -> p.getCategory().equalsIgnoreCase("Books"))
-				.mapToDouble(p -> p.getPrice())
+				.mapToDouble(Product::getPrice)
 				.summaryStatistics();
 		
 		long endTime = System.currentTimeMillis();
@@ -250,85 +208,65 @@ public class StreamApiTest {
 				statistics.getCount(), statistics.getAverage(), statistics.getMax(), statistics.getMin(), statistics.getSum()));
 		
 	}
-	
-	//
-	// Obtain a data map of order id and the order's product count
-	//
+
 	@Test
+	@DisplayName("Obtain a mapping of order id and the order's product count")
 	public void exercise11() {
-		
-		log.info("exercise 11 - Obtain a mapping of order id and the order's product count");
-		long startTime = System.currentTimeMillis();	
+		long startTime = System.currentTimeMillis();
 		Map<Long, Integer>  result = orderRepo.findAll()
 				.stream()
 				.collect(
 						Collectors.toMap(
-								order -> order.getId(),
-								order -> order.getProducts().size()
-								)
+								Order::getId,
+								order -> order.getProducts().size())
 						);
 		
 		long endTime = System.currentTimeMillis();
 		log.info(String.format("exercise 11 - execution time: %1$d ms", (endTime - startTime)));		
 		log.info(result.toString());
 	}
-	
-	//
-	// Obtain a data map of customer and list of orders
-	//
+
 	@Test
+	@DisplayName("Obtain a data map of customer and list of orders")
 	public void exercise12() {
-		
-		log.info("exercise 12 - Obtain a data map of customer and list of orders");
-		long startTime = System.currentTimeMillis();	
+		long startTime = System.currentTimeMillis();
 		Map<Customer, List<Order>> result = orderRepo.findAll()
 				.stream()
-				.collect(
-						Collectors.groupingBy(Order::getCustomer)
-						);
+				.collect(Collectors.groupingBy(Order::getCustomer));
 		
 		long endTime = System.currentTimeMillis();
 		log.info(String.format("exercise 12 - execution time: %1$d ms", (endTime - startTime)));		
 		log.info(result.toString());
 	}
-	
-	//
-	// Obtain a data map with order and its total price
-	//
+
 	@Test
+	@DisplayName("Obtain a data map with order and its total price")
 	public void exercise13() {
-		
-		log.info("exercise 13 - Obtain a data map with order and its total price");
-		long startTime = System.currentTimeMillis();	
+		long startTime = System.currentTimeMillis();
 		Map<Order, Double> result = orderRepo.findAll()
 				.stream()
 				.collect(
 					Collectors.toMap(
 							Function.identity(), 
 							order -> order.getProducts().stream()
-										.mapToDouble(p -> p.getPrice()).sum()
-						) 
+										.mapToDouble(Product::getPrice).sum())
 					);
 		
 		long endTime = System.currentTimeMillis();
 		log.info(String.format("exercise 13 - execution time: %1$d ms", (endTime - startTime)));		
 		log.info(result.toString());
 	}
-	
-	//
-	// Obtain a data map of product name by category
-	//
+
 	@Test
+	@DisplayName("Obtain a data map of product name by category")
 	public void exercise14() {
-		
-		log.info("exercise 14 - Obtain a data map of product name by category");
 		long startTime = System.currentTimeMillis();	
 		Map<String, List<String>> result = productRepo.findAll()
 				.stream()
 				.collect(
 						Collectors.groupingBy(
 								Product::getCategory,
-								Collectors.mapping(product -> product.getName(), Collectors.toList()))
+								Collectors.mapping(Product::getName, Collectors.toList()))
 						);
 		
 		
@@ -336,16 +274,11 @@ public class StreamApiTest {
 		log.info(String.format("exercise 14 - execution time: %1$d ms", (endTime - startTime)));		
 		log.info(result.toString());
 	}
-	
-	//
-	// Get the most expensive product per category
-	//
+
 	@Test
+	@DisplayName("Get the most expensive product per category")
 	void exercise15() {
-		
-		
-		log.info("exercise 15 - Get the most expensive product per category");
-		long startTime = System.currentTimeMillis();	
+		long startTime = System.currentTimeMillis();
 		Map<String, Optional<Product>> result = productRepo.findAll()
 				.stream()
 				.collect(

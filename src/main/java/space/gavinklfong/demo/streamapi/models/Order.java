@@ -39,5 +39,4 @@ public class Order {
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	Set<Product> products;
-		
 }
