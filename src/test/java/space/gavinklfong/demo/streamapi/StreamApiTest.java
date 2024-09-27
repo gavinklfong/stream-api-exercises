@@ -146,20 +146,31 @@ public class StreamApiTest {
 	@DisplayName("Get the 3 cheapest products of \"Books\" category")
 	public void exercise5() {
 		long startTime = System.currentTimeMillis();
+		
 //              Optional<Product> result = productRepo.findAll()
 //                              .stream()
 //                              .filter(p -> p.getCategory().equalsIgnoreCase("Books"))
 //                              .sorted(Comparator.comparing(Product::getPrice))
 //                              .findFirst();
 
-		Optional<Product> result = productRepo.findAll()
+		/* In this exercise we need to return 3 cheapest product from book category as per this code we are returning only min one.  
+  		Optional<Product> result = productRepo.findAll()
 				.stream()
 				.filter(p -> p.getCategory().equalsIgnoreCase("Books"))
-				.min(Comparator.comparing(Product::getPrice));
+				.min(Comparator.comparing(Product::getPrice)); */
+		
+		// this will return Product with Id (7, 16, 17 ) which is cheapest
+		List<Product> products = productRepo.findAll().stream()
+		                .sorted((o1 , o2) -> (int) (o1.getPrice() - o2.getPrice()))
+		                .filter(product -> product.getCategory().equalsIgnoreCase("Books"))
+		                .limit(3)
+		                .toList();
+		
 
 		long endTime = System.currentTimeMillis();
 		log.info(String.format("exercise 5 - execution time: %1$d ms", (endTime - startTime)));
-		log.info(result.get().toString());
+		//log.info(result.get().toString()); // we need to change this also : 
+		products.forEach(product -> log.info(product.toString()));
 
 	}
 
