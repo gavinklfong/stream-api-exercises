@@ -23,7 +23,8 @@ public class Order {
 
 	@Column(name="delivery_date")
 	private LocalDate deliveryDate;
-	
+
+	@Column(name = "status")
 	private String status;
 	
 	@ManyToOne
